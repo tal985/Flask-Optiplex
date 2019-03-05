@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2>{{ title }}</h2>
+
+<div class="jumbotron">
+    <form method="POST">
+
+        <input type="text" placeholder="IP Address" name="ip" minlength="7" maxlength="15" required>
+        <br>
+        <input type="number" placeholder="Port" name="port" min="1" max="65535" required>
+        <br>
+        <button type="submit">Check Port</button>
+    </form>
+</div>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <script>
+            var messages = {{ messages | safe }};
+            for (var i = 0; i < messages.length; i++)
+                window.alert(messages[i]);
+        </script>
+    {% endif %}
+{% endwith %}
+
+{% endblock %}

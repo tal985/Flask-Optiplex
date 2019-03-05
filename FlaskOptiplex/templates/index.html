@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<style>
+    .aligncenter {
+        text-align: center;
+    }
+</style>
+<h2 align="center">{{ title }}</h2>
+<p class="aligncenter">
+    (Checks every 15 seconds) <br>
+    <img src="{{ user_image }}" alt="User Image" id="status">
+</p>
+
+<script>
+    function update()
+    {
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        $.getJSON($SCRIPT_ROOT+"/so",
+        function (data)
+        {
+            var pic = document.getElementById("status")
+            pic.src = data.user_image
+            setTimeout(update, 15000)
+        });
+    }
+    setTimeout(update, 15000)
+</script>
+
+<div class="jumbotron">
+    <form method="POST">
+        <button type="submit">Wake Optiplex</button>
+    </form>
+</div>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+<script>
+            var messages = {{ messages | safe }};
+            for (var i = 0; i < messages.length; i++)
+                window.alert(messages[i]);
+</script>
+    {% endif %}
+{% endwith %}
+{% endblock %}
