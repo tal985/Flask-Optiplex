@@ -40,3 +40,12 @@ input[type="checkbox"].input-validation-error {
 .validation-summary-valid {
     display: none;
 }
+
+.panel {
+    border-color: #dddddd;
+}
+
+.panel > .panel-heading {
+    background-color: #4CAF50;
+    color: white;
+}

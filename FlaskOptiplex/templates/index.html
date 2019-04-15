@@ -6,11 +6,55 @@
         text-align: center;
     }
 </style>
-<h2 align="center">{{ title }}</h2>
-<p class="aligncenter">
-    (Checks every 15 seconds) <br>
-    <img src="{{ user_image }}" alt="User Image" id="status">
-</p>
+
+<br>
+
+<div class="row">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 align="center"><b>Optiplex Status</b></h4>
+        </div>
+        <div class="panel-body">
+            <p class="aligncenter">
+                (Checks every 20 seconds) <br>
+                <img src="{{ user_image }}" alt="User Image" id="status">
+            </p>
+        </div>
+    </div>
+
+    <div class="col-sm-6">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 align="center"> <b>Nova Magia (25565) </b> </h5>
+            </div>
+            <div class="panel-body">
+                <h5 align="center"> <b>Version</b> </h5>
+                <h5 align="center" id="NovaMagiaVersion"> {{ NovaMagiaVersion }} </h5>
+                <h5 align="center"> <b>Players</b> </h5>
+                <h5 align="center" id="NovaMagiaPeople"> {{ NovaMagiaPlayers }} </h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 align="center"> <b>Let It Die (25567) </b> </h5>
+            </div>
+            <div class="panel-body">
+                <h5 align="center"> <b>Version</b> </h5>
+                <h5 align="center" id="LetItDieVersion"> {{ LetItDieVersion }} </h5>
+                <h5 align="center"> <b>Players</b></h5>
+                <h5 align="center" id="LetItDiePeople"> {{ LetItDiePlayers }} </h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="POST">
+    <button type="submit"> <b>Wake Optiplex</b> </button>
+</form>
 
 <script>
     function update()
@@ -19,19 +63,21 @@
         $.getJSON($SCRIPT_ROOT+"/so",
         function (data)
         {
-            var pic = document.getElementById("status")
-            pic.src = data.user_image
-            setTimeout(update, 15000)
+            var pic = document.getElementById("status");
+            var NovaMagiaPeople = document.getElementById("NovaMagiaPeople");
+            var NovaMagiaVersion = document.getElementById("NovaMagiaVersion");
+            var LetItDiePeople = document.getElementById("LetItDiePeople");
+            var LetItDieVersion = document.getElementById("LetItDieVersion");
+            pic.src = data.user_image;
+            NovaMagiaPeople.innerHTML = data.NovaMagia.Players;
+            NovaMagiaVersion.innerHTML = data.NovaMagia.Version;
+            LetItDiePeople.innerHTML = data.LetItDie.Players;
+            LetItDieVersion.innerHTML = data.LetItDie.Version;
+            setTimeout(update, 20000);
         });
     }
-    setTimeout(update, 15000)
+    setTimeout(update, 20000);
 </script>
-
-<div class="jumbotron">
-    <form method="POST">
-        <button type="submit">Wake Optiplex</button>
-    </form>
-</div>
 
 {% with messages = get_flashed_messages() %}
     {% if messages %}
