@@ -4,6 +4,10 @@ import subprocess
 
 from FlaskOptiplex import models
 
+IP_OPTIPLEX = '192.168.1.136'
+PORT_NOVAMAGIA = '25565'
+PORT_LETITDIE = '25567'
+
 """Wake on Lan"""
 def wol():
     ip = "255.255.255.255"
@@ -35,42 +39,16 @@ def create_magic_packet(macaddress):
 
 """Check Optiplex status"""
 def checkOptiplex():
-    nmap = nmapScan('192.168.1.136', '222')
-    if nmap == 'open':
+    if checkIP(IP_OPTIPLEX, 222):
         return 'static/images/yes.png'
     return 'static/images/no.png'
 
-
-"""Wrapper function for using nmap."""
-def nmapScan(ip, port):
-
-    #Convert external IP to internal
-    if ip == '72.46.198.99':
-        if port == '2222':
-            ip = '192.168.1.146'
-        else:
-            ip = '192.168.1.136'
-
-    status = subprocess.run('nmap ' + ip + ' -p ' + port, stdout=subprocess.PIPE, shell=True).stdout.decode('utf-8')
-
-    if 'open' in status and 'filtered' not in status:
-        status = 'open'
-    elif 'closed' in status:
-        status = 'closed'
-    else:
-        status = 'filtered'
-
-    return status
-
-"""Write verification for port and ip code"""
-def validIPPort(ip, port):
-
-    try:
-        socket.inet_aton(ip)
-        if int(port) > 0 and int(port) < 65536:
-            return True
-        print ("what?")
-        return False
-    except Exception as e:
-        print (e)
-        return False
+"""Check if port is open at IP"""
+def checkIP(ip, port):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(0.05)
+    result = sock.connect_ex((ip, port))
+    sock.close()
+    if result == 0:
+        return True
+    return False
